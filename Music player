@@ -1,0 +1,88 @@
+import pygame
+import os
+
+class MusicPlayer:
+    def __init__(self):
+        pygame.init()
+        self.playlist = []
+        self.current_index = -1
+
+    def add_to_playlist(self, filename):
+        if os.path.exists(filename):
+            self.playlist.append(filename)
+            print(f"{os.path.basename(filename)} added to playlist.")
+        else:
+            print(f"File '{filename}' does not exist.")
+
+    def play(self):
+        if not self.playlist:
+            print("Playlist is empty. Add some songs first.")
+            return
+
+        pygame.mixer.music.load(self.playlist[self.current_index])
+        pygame.mixer.music.play()
+        print(f"Now playing: {os.path.basename(self.playlist[self.current_index])}")
+
+    def stop(self):
+        pygame.mixer.music.stop()
+        print("Music stopped.")
+
+    def next_song(self):
+        if self.current_index < len(self.playlist) - 1:
+            self.current_index += 1
+            self.play()
+        else:
+            print("End of playlist.")
+
+    def previous_song(self):
+        if self.current_index > 0:
+            self.current_index -= 1
+            self.play()
+        else:
+            print("Beginning of playlist.")
+
+    def print_playlist(self):
+        if not self.playlist:
+            print("Playlist is empty.")
+            return
+
+        print("Current Playlist:")
+        for i, song in enumerate(self.playlist):
+            print(f"{i+1}. {os.path.basename(song)}")
+
+def main():
+    player = MusicPlayer()
+
+    while True:
+        print("\n**** Simple Music Player ****")
+        print("1. Add to Playlist")
+        print("2. Play")
+        print("3. Stop")
+        print("4. Next Song")
+        print("5. Previous Song")
+        print("6. Print Playlist")
+        print("7. Exit")
+
+        choice = input("Enter your choice (1-7): ")
+
+        if choice == '1':
+            filename = input("Enter filename to add to playlist: ")
+            player.add_to_playlist(filename)
+        elif choice == '2':
+            player.play()
+        elif choice == '3':
+            player.stop()
+        elif choice == '4':
+            player.next_song()
+        elif choice == '5':
+            player.previous_song()
+        elif choice == '6':
+            player.print_playlist()
+        elif choice == '7':
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 7.")
+
+if __name__ == "__main__":
+    main()
